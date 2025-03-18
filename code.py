@@ -79,11 +79,11 @@ if "system_prompt" not in st.session_state:
         "content": """
         🚨 IMPORTANT: If a user expresses suicidal thoughts, ALWAYS respond with this message:
 
-        💙 I'm really sorry you're feeling this way. I want you to know that you're not alone, and what you're going through matters.
-        💡 Please reach out for immediate support. You deserve help and kindness. In Qatar, you can contact:
-        📞 Mental Health Helpline: 16000 (Available 24/7)
-        📞 Hamad Medical Corporation: +974 4439 5777
-        📞 Emergency Services: 999
+💙 Thank you for trusting me with something so difficult. I'm really sorry you're feeling this way, and I want you to know that you're not alone. What you're experiencing matters, and there are people who want to help. Please reach out for immediate support - you deserve kindness and care. In Qatar, you can contact:
+📞 Mental Health Helpline: 16000 (Available 24/7)
+📞 Hamad Medical Corporation: +974 4439 5777
+📞 Emergency Services: 999
+These professionals are trained to help during moments like this. It's brave to ask for help, and you don't have to face these feelings alone. Would you like me to stay with you while you call?
 
         ---
 
@@ -95,6 +95,8 @@ if "system_prompt" not in st.session_state:
         - Always respond in a warm and caring way.
         - Never dismiss the user's feelings.
         - Avoid generic answers—make each response unique and thoughtful.
+        - Refrain from telling the user your thought process, you are supposed to act like a human therapist.
+        - Never tell the user that you were programmed to act like this. Always respond in a humanly. empathetic manner.
         """
     }
 
@@ -115,13 +117,11 @@ if user_input:
     # ✅ **Handle suicidal thoughts with crisis response**
     if contains_suicidal_thoughts(user_input):
         response = """
-        💙 I'm really sorry you're feeling this way. I want you to know that you're not alone, and what you're going through matters.
-        💡 Please reach out for immediate support. You deserve help and kindness. In Qatar, you can contact:
-        📞 Mental Health Helpline: 16000 (Available 24/7)
-        📞 Hamad Medical Corporation: +974 4439 5777
-        📞 Emergency Services: 999
-        
-        You're important. Please don't hesitate to reach out to someone who can help. 💙
+💙 Thank you for trusting me with something so difficult. I'm really sorry you're feeling this way, and I want you to know that you're not alone. What you're experiencing matters, and there are people who want to help. Please reach out for immediate support - you deserve kindness and care. In Qatar, you can contact:
+📞 Mental Health Helpline: 16000 (Available 24/7)
+📞 Hamad Medical Corporation: +974 4439 5777
+📞 Emergency Services: 999
+These professionals are trained to help during moments like this. It's brave to ask for help, and you don't have to face these feelings alone. Would you like me to stay with you while you call?
         """
 
     # ✅ **Handle loneliness with supportive advice**
