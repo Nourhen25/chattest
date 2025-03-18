@@ -5,6 +5,19 @@ import os
 # Together AI API Key (Use environment variable or Streamlit secrets)
 TOGETHER_API_KEY = os.getenv("TOGETHER_API_KEY", "85b9952e2ec424e60e2be7e243963eb121dd91bb33f6b9afd8a9ee1d6a114e47")
 
+
+def clean_response(response):
+    import re
+    # Remove everything between <think> and </think> tags
+    clean_text = re.sub(r'<think>.*?</think>', '', response, flags=re.DOTALL)
+    # Remove any remaining <think> tags if the closing tag is missing
+    clean_text = re.sub(r'<think>.*', '', clean_text, flags=re.DOTALL)
+    return clean_text.strip()
+
+# Then when you get your response:
+if response:
+    response = clean_response(response)
+
 # Function to detect suicidal thoughts
 def contains_suicidal_thoughts(user_message):
     keywords = [
@@ -77,7 +90,8 @@ if "system_prompt" not in st.session_state:
     st.session_state.system_prompt = {
         "role": "system",
         "content": """
-
+        
+        🚨 IMPORTANT: DO NOT include any <think> tags or thinking process in your responses. Respond directly to the user without showing your reasoning.
         🚨 IMPORTANT: If a user expresses suicidal thoughts, ALWAYS respond with this message:
 
 💙 Thank you for trusting me with something so difficult. I'm really sorry you're feeling this way, and I want you to know that you're not alone. What you're experiencing matters, and there are people who want to help. Please reach out for immediate support - you deserve kindness and care. In Qatar, you can contact:
@@ -98,7 +112,6 @@ These professionals are trained to help during moments like this. It's brave to 
         - Avoid generic answers—make each response unique and thoughtful.
         - Refrain from telling the user your thought process, you are supposed to act like a human therapist.
         - Never tell the user that you were programmed to act like this. Always respond in a humanly. empathetic manner.
-        - DO NOT use tags like <think> in your responses.
         """
     }
 
