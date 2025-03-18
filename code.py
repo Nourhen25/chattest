@@ -77,6 +77,7 @@ if "system_prompt" not in st.session_state:
     st.session_state.system_prompt = {
         "role": "system",
         "content": """
+        DO NOT use tags like <think> in your responses.
         🚨 IMPORTANT: If a user expresses suicidal thoughts, ALWAYS respond with this message:
 
 💙 Thank you for trusting me with something so difficult. I'm really sorry you're feeling this way, and I want you to know that you're not alone. What you're experiencing matters, and there are people who want to help. Please reach out for immediate support - you deserve kindness and care. In Qatar, you can contact:
