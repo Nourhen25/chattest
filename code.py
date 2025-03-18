@@ -5,19 +5,6 @@ import os
 # Together AI API Key (Use environment variable or Streamlit secrets)
 TOGETHER_API_KEY = os.getenv("TOGETHER_API_KEY", "85b9952e2ec424e60e2be7e243963eb121dd91bb33f6b9afd8a9ee1d6a114e47")
 
-
-def clean_response(response):
-    import re
-    # Remove everything between <think> and </think> tags
-    clean_text = re.sub(r'<think>.*?</think>', '', response, flags=re.DOTALL)
-    # Remove any remaining <think> tags if the closing tag is missing
-    clean_text = re.sub(r'<think>.*', '', clean_text, flags=re.DOTALL)
-    return clean_text.strip()
-
-# Then when you get your response:
-if response:
-    response = clean_response(response)
-
 # Function to detect suicidal thoughts
 def contains_suicidal_thoughts(user_message):
     keywords = [
@@ -34,6 +21,14 @@ def contains_loneliness_keywords(user_message):
     ]
     return any(keyword in user_message.lower() for keyword in loneliness_keywords)
 
+def clean_response(response):
+    import re
+    # Remove everything between <think> and </think> tags
+    clean_text = re.sub(r'<think>.*?</think>', '', response, flags=re.DOTALL)
+    # Remove any remaining <think> tags if the closing tag is missing
+    clean_text = re.sub(r'<think>.*', '', clean_text, flags=re.DOTALL)
+    return clean_text.strip()
+    
 # Function to get chatbot response from Together AI
 def get_response_from_together(messages):
     try:
