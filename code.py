@@ -31,7 +31,7 @@ def get_response_from_together(messages):
         }
 
         data = {
-            "model": "mistralai/Mistral-7B-Instruct-v0.1",
+            "model": "deepseek-ai/DeepSeek-R1-Distill-Llama-70B-free",
             "messages": messages,
             "temperature": 0.3,  # Lower randomness for better adherence to system prompt
             "max_tokens": 500
