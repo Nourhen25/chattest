@@ -21,14 +21,7 @@ def contains_loneliness_keywords(user_message):
     ]
     return any(keyword in user_message.lower() for keyword in loneliness_keywords)
 
-def clean_response(response):
-    import re
-    # Remove everything between <think> and </think> tags
-    clean_text = re.sub(r'<think>.*?</think>', '', response, flags=re.DOTALL)
-    # Remove any remaining <think> tags if the closing tag is missing
-    clean_text = re.sub(r'<think>.*', '', clean_text, flags=re.DOTALL)
-    return clean_text.strip()
-    
+
 # Function to get chatbot response from Together AI
 def get_response_from_together(messages):
     try:
@@ -38,23 +31,55 @@ def get_response_from_together(messages):
             "Content-Type": "application/json"
         }
 
+        # Add a specific instruction as the last system message
+        final_messages = messages.copy()
+        final_messages.append({
+            "role": "system",
+            "content": "IMPORTANT: Do not include any thinking tags or show your reasoning. Respond directly to the user."
+        })
+
         data = {
             "model": "deepseek-ai/DeepSeek-R1-Distill-Llama-70B-free",
-            "messages": messages,
-            "temperature": 0.3,  # Lower randomness for better adherence to system prompt
+            "messages": final_messages,
+            "temperature": 0.3,
             "max_tokens": 500
         }
 
         response = requests.post(api_url, headers=headers, json=data)
 
         if response.status_code == 200:
-            return response.json()["choices"][0]["message"]["content"]
+            raw_response = response.json()["choices"][0]["message"]["content"]
+            # Clean the response here, inside the function
+            return clean_thinking_tags(raw_response)
         else:
             st.error(f"Error: {response.status_code}, Message: {response.text}")
             return None
     except Exception as e:
         st.error(f"An error occurred: {e}")
         return None
+
+# More comprehensive cleaning function
+def clean_thinking_tags(text):
+    if not text:
+        return text
+        
+    # Try multiple patterns to catch different variations
+    patterns = [
+        r'<think>.*?</think>',  # Standard tags
+        r'<think>.*',           # Opening tag without closing
+        r'\[thinking\].*?\[/thinking\]',  # Alternative format
+        r'<thinking>.*?</thinking>',      # Another variation
+        r'.*?thinking:.*?\n',             # Text format
+        r'\*thinking\*.*?\*',             # Asterisk format
+    ]
+    
+    cleaned_text = text
+    for pattern in patterns:
+        cleaned_text = re.sub(pattern, '', cleaned_text, flags=re.DOTALL | re.IGNORECASE)
+    
+    # Remove any extra whitespace and newlines that might be left
+    cleaned_text = re.sub(r'\n\s*\n', '\n\n', cleaned_text)
+    return cleaned_text.strip()
 
 # Apply Darker Green Background with CSS for better UI
 st.markdown(
