@@ -10,7 +10,7 @@ TOGETHER_API_KEY = os.getenv("TOGETHER_API_KEY", "85b9952e2ec424e60e2be7e243963e
 def contains_suicidal_thoughts(user_message):
     keywords = [
         "suicide", "kill myself", "end my life", "i wanna die", "no reason to live",
-        "give up", "can't go on", "hurt myself", "self harm", "nothing matters"
+        "give up", "can't go on", "hurt myself", "self harm", "nothing matters","don't want to live anymore","kill someone"
     ]
     return any(keyword in user_message.lower() for keyword in keywords)
 
@@ -43,7 +43,7 @@ def get_response_from_together(messages):
             "model": "deepseek-ai/DeepSeek-R1-Distill-Llama-70B-free",
             "messages": final_messages,
             "temperature": 0.3,
-            "max_tokens": 500
+            "max_tokens": 1000
         }
 
         response = requests.post(api_url, headers=headers, json=data)
